@@ -1,1 +1,1 @@
-web: uvicorn chatapp:app --host=0.0.0.0 --port=${PORT:-5000}
+web: uvicorn lib.chatapp:app --host=0.0.0.0 --port=${PORT:-5000}
