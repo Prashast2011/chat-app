@@ -1,7 +1,7 @@
 from .auth import *
 from fastapi import FastAPI, Depends, status, Form
 from fastapi.staticfiles import StaticFiles
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, FileResponse
 from .database import *
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
