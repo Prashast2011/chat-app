@@ -16,6 +16,11 @@ app.mount("/ui", StaticFiles(directory="ui"), name= "static")
 def root():
     return'hello world'
 
+@app.get("/favicon.ico")
+def get_favicon():
+    return FileResponse("ui/images/favicon.ico")
+
+
 oath2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -59,9 +64,3 @@ def post_login(username: str = Form(...), password: str = Form(...)):
         return response
     else: 
         return RedirectResponse("ui/login.html", status.HTTP_302_FOUND)
-    
-
-
-
-
-
