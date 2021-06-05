@@ -22,7 +22,7 @@ def get_existing_rooms():
 def get_messages_from_room(room: str, username: str ):
     with driver.connect(DATABASE_URL)  as chat_db:
         return[
-            dict(username=m[1], timestamp=m[2], message=m[3])
+            dict(username=m[1], timestamp=m[2][:16], message=m[3])
             for m in chat_db.execute(
                 f"SELECT * FROM MESSAGES WHERE room='{room}'"
             ).fetchall()
