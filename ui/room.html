@@ -2,132 +2,162 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Hugo 0.80.0">
-  <title>Chat Room</title>
+    <meta charset="utf-8">
+    <meta="viewport" content="width=device-width, initial-scale=1">
+        <meta="description" content="">
+            <meta="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+                <meta="generator" content="Hugo 0.80.0">
+                    <title>Chat Room</title>
 
+                    <!-- Bootstrap core CSS -->
+                    <link href="css/bootstrap.min.css" rel="stylesheet">
 
+                    <style>
+                        .bd-placeholder-img {
+                            font-size: 1.125rem;
+                            text-anchor: middle;
+                            -webkit-user-select: none;
+                            -moz-user-select: none;
+                            user-select: none;
+                        }
 
+                        @media (min-width: 768px) {
+                            .bd-placeholder-img-lg {
+                                font-size: 3.5rem;
+                            }
+                        }
+                    </style>
 
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-
-
-
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-    }
-
-    @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-      }
-    }
-    body {
-      background-image: url('images/background Icon.png')
-    }
-  </style>
-
-
-  <!-- Custom styles for this template -->
-  <link href="css/starter-template.css" rel="stylesheet">
+                    <!-- Custom styles for this template -->
+                    <link href="css/room.css" rel="stylesheet">
 </head>
 
-<body>
-  <main class="container">
-    <div class="starter-template text-center py-4">
-      <h3><span id="user">Anonymous</span> in <span id="room">public</span> Room </h3>
-      <div class="row">
-        <div class="col col-2">
-          <nav class="nav flex-column" style="height: 400px;">
-            <a class="nav-link active" aria-current="page" href="#">Active</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </nav>
-          <div class="form-floating" style="padding-top: 5px;">
-            <input type="text" class="form-control" id="floatingInput">
-          </div>
+<body class="container">
+    <main>
+        <div class="text-center">
+            <img class="mb-4" src="images/logo.svg" alt="" width="100" height="100">
+            <h1 class="h3 mb-3 fw-normal">
+                <span id="user">Anonymous</span> in <span id="room">Public</span> Room
+            </h1>
         </div>
-        <div class="col col-10">
-          <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="messages" style="height: 400px"
-              readonly></textarea>
-            <div class="form-floating" style="padding-top: 5px;">
-              <input type="text" class="form-control" id="message" onkeyup="sendMessage(event)">
+        <div class="row">
+            <div class="col col-2">
+                <ul id="rooms" class="nav flex-column" style="height: 500px;">
+                    <li class="nav-item">
+                        <a class=" nav-link" href="#">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                </ul>
+                <div class="form-floating" style="padding-top: 10px;">
+                    <input type="text" class="form-control" id="new_room" onkeyup="setRoom(event)">
+                    <label for="new_room">Room</label>
+                </div>
+
             </div>
-          </div>
+            <div class="col col-10">
+                <div class="form-floating">
+                    <textarea class="form-control" id="messages" style="height: 500px; resize:none" readonly></textarea>
+                    <div class="form-floating" style="padding-top: 10px;">
+                        <input type="text" class="form-control" id="message" onkeyup="sendMessage(event)">
+                        <label for="message">Message</label>
+                    </div>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </main>
+    <script src="js/axios.min.js"></script>
+    <script src="js/cookie.min.js"></script>
 
-  </main><!-- /.container -->
-
-
-  <!-- <script src="/docs/5.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-    crossorigin="anonymous"></script> -->
-  <script src="js/js.cookie.min.js"></script>
-  <script src="js/axios.min.js"></script>
-
-  <script>
-    let elements = {
-      user: document.getElementById('user'),
-      room: document.getElementById('room'),
-      message: document.getElementById('message'),
-      messages: document.getElementById('messages'),
-      header: { 'Authorization': "Bearer " + Cookies.get('token') }
-    }
-
-    startUp();
-
-    function startUp() {
-      axios.get('/user', { 'headers': elements.header })
-        .then(function (response) {
-          elements.user.innerHTML = response.data
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      setInterval(() => {
-        getMessages()
-      }, 5000);
-    }
-    function getMessages() {
-      axios.get(`/room/${elements.room.innerHTML}`, { 'headers': elements.header })
-        .then(function (response) {
-          elements.messages.innerHTML = response.data.map((v) => {
-            return `[${v.timestamp}]:[${v.username}] ${v.message}`
-          }).join("\n")
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-
-    function sendMessage(event) {
-      if (event.keyCode == 13) {
-        axios.post(`/room/${elements.room.innerHTML}`, { 'message': message.value }, { 'headers': elements.header })
-          .then(function (response) {
-            elements.message.value = ""
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-    }
-
-  </script>
+    <script>
+        const token = Cookies.get('token');
+        const elements = {
+            user: document.getElementById('user'),
+            room: document.getElementById('room'),
+            rooms: document.getElementById('rooms'),
+            messages: document.getElementById('messages'),
+            message: document.getElementById('message'),
+            headers: { 'headers': { 'Authorization': `Bearer ${token}` } }
+        }
+        startUp()
+        function setRooms() {
+            axios.get('/rooms', elements.headers)
+                .then(function (response) {
+                    elements.rooms.innerHTML = response.data.map((v) => {
+                        return `
+                    <li class="nav-item">
+                        <a class="nav-link" href='#' onclick="changeRoom('${v.room}')">${v.room}</a>
+                    </li>`
+                    }).join("\n")
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        function startUp() {
+            axios.get('/user', elements.headers)
+                .then(function (response) {
+                    elements.user.innerHTML = response.data
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            setRooms();
+            getMessages();
+            setInterval(() => {
+                getMessages();
+                setRooms()
+            }, 5000);
+        }
+        function changeRoom(room_name) {
+            room.innerHTML = room_name
+            getMessages();
+        }
+        function setRoom(event) {
+            if (event.keyCode == 13) {
+                room.innerHTML = new_room.value;
+            }
+        }
+        function getMessages() {
+            axios.get(`/messages/${room.innerHTML}`, elements.headers)
+                .then(function (response) {
+                    elements.messages.innerHTML = response.data.map((v) => {
+                        return `[${v.timestamp}]:[${v.username}] ${v.message}`
+                    }).join("\n")
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        function getonls() {
+            axios.get(`/messages/${room.innerHTML}`, elements.headers)
+                .then(function (response) {
+                    elements.messages.innerHTML = response.data.map((v) => {
+                        return `[${v.timestamp}]:[${v.username}] ${v.message}`
+                    }).join("\n")
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        function sendMessage(event) {
+            if (event.keyCode == 13) {
+                axios.post(`/messages/${room.innerHTML}`, { 'message': message.value }, elements.headers)
+                    .then(function (response) {
+                        elements.message.value = ""
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+    </script>
 
 </body>
 
 </html>
-

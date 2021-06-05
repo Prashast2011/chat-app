@@ -11,7 +11,6 @@ app.mount("/ui", StaticFiles(directory="ui"), name= "static")
 
 
 
-
 @app.get("/")
 def root():
     return'hello world'
@@ -36,6 +35,14 @@ def get_room(room: str, username: str = Depends(get_user)):
 @app.get("/db")
 def get_db():
     return create_tables()
+
+
+
+@app.get("/rooms")
+def get_rooms(token=Depends(oath2_scheme)):
+    return get_existing_rooms()
+
+
 
 @app.get("/reset")
 def clear_db():
@@ -64,3 +71,13 @@ def post_login(username: str = Form(...), password: str = Form(...)):
         return response
     else: 
         return RedirectResponse("ui/login.html", status.HTTP_302_FOUND)
+
+@app.get("/messages/{room}")
+def get_messages(room: str, username=Depends(get_user)):
+    return get_messages_from_room(room, username)
+    
+
+@app.post("/messages/{room}")
+def post_message(room: str, message:Message, username=Depends(get_user)):
+    return post_message_to_room(room, message, username)
+

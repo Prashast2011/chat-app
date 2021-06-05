@@ -9,12 +9,8 @@
     <meta name="generator" content="Hugo 0.80.0">
     <title>Signin/Singup</title>
 
-
-
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
-
 
     <style>
         .bd-placeholder-img {
@@ -32,29 +28,36 @@
         }
     </style>
 
-
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
 </head>
 
 <body class="text-center">
-
     <main class="form-signin">
         <form method="post" action="/login">
             <img class="mb-4" src="images/logo.svg" alt="" width="100" height="100">
-            <h1 class="h3 mb-3 fw-normal">Please sign in or sign up</h1>
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
             <label for="inputEmail" class="visually-hidden">Email address</label>
             <input name="username" type="email" id="inputEmail" class="form-control" placeholder="Email address"
                 required autofocus>
             <label for="inputPassword" class="visually-hidden">Password</label>
             <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password"
                 required>
-
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in/up</button>
+            <div id="errorMessage" class="alert alert-danger" role="alert" style="padding:5px; display:none">
+                Incorrect credentials
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
         </form>
     </main>
 
+    <script>
+        const error = document.getElementById('errorMessage');
+        const isError = new URLSearchParams(window.location.search).get('error');
 
+        if (isError) {
+            error.style.display = "block"
+        }
+    </script>
 
 </body>
 
