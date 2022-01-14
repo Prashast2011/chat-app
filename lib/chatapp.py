@@ -69,7 +69,7 @@ def post_login(username: str = Form(...), password: str = Form(...)):
         response = RedirectResponse("ui/room.html", status.HTTP_302_FOUND)
         response.set_cookie(key="token", value=get_user_token(username))
         return response
-    else: 
+    else:
         return RedirectResponse("ui/login.html", status.HTTP_302_FOUND)
 
 @app.get("/messages/{room}")

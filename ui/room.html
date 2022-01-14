@@ -12,33 +12,15 @@
                     <!-- Bootstrap core CSS -->
                     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-                    <style>
-                        .bd-placeholder-img {
-                            font-size: 1.125rem;
-                            text-anchor: middle;
-                            -webkit-user-select: none;
-                            -moz-user-select: none;
-                            user-select: none;
-                        }
-
-                        @media (min-width: 768px) {
-                            .bd-placeholder-img-lg {
-                                font-size: 3.5rem;
-                            }
-                        }
-                    </style>
-
+                    
                     <!-- Custom styles for this template -->
-                    <link href="css/room.css" rel="stylesheet">
+                    <link href="css/index.css" rel="stylesheet">
 </head>
 
-<body class="container">
-    <main>
+<body>
+    <main class="container d-flex" style="background-color:white; height:95vh; margin-top:2.5vh">
         <div class="text-center">
-            <img class="mb-4" src="images/logo.svg" alt="" width="100" height="100">
-            <h1 class="h3 mb-3 fw-normal">
-                <span id="user">Anonymous</span> in <span id="room">Public</span> Room
-            </h1>
+            
         </div>
         <div class="row">
             <div class="col col-2">
@@ -61,7 +43,18 @@
             </div>
             <div class="col col-10">
                 <div class="form-floating">
-                    <textarea class="form-control" id="messages" style="height: 500px; resize:none" readonly></textarea>
+                    <div class="p-0" style="width:70%; ">
+                        <div class="d-flex flex-column" style=" height:100%">
+                            <h1 class="h3 mb-3 fw-normal">
+                                <span id="user">Anonymous</span> in <span id="room">Public</span> Room
+                            </h1>
+                    <div class="flex-fill messages">
+                        <div class="messages-contents" overflow-auto id = "messages">
+                        </div>
+                    </div>
+                </div>
+                </div>
+                    <!--<textarea class="form-control" id="messages" style="height: 500px; resize:none" readonly></textarea> -->
                     <div class="form-floating" style="padding-top: 10px;">
                         <input type="text" class="form-control" id="message" onkeyup="sendMessage(event)">
                         <label for="message">Message</label>
@@ -127,7 +120,16 @@
             axios.get(`/messages/${room.innerHTML}`, elements.headers)
                 .then(function (response) {
                     elements.messages.innerHTML = response.data.map((v) => {
-                        return `[${v.timestamp}]:[${v.username}] ${v.message}`
+                        //return `[${v.timestamp}]:[${v.username}] ${v.message}`
+                        return `
+                            <div class="float-start mt-2 ms-5 p-2 message-left">
+                                [${v.username}] ${v.message}
+                                <div class="clearfix"></div>
+                                <div class="lh-1 message-meta text-muted float-end">
+                                    ${v.timestamp}
+                                </div>
+                            </div>
+`
                     }).join("\n")
                 })
                 .catch(function (error) {
